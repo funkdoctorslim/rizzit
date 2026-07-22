@@ -1,7 +1,7 @@
 # rizzit 🎬
 
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](#)
-[![License](https://img.shields.io/badge/license-MIT%20%2F%20Apache--2.0-blue)](#)
+[![License](https://img.shields.io/badge/license-Unlicense-blue)](#)
 [![Crate](https://img.shields.io/badge/crates.io-rizzit-orange)](#)
 
 > A fast, vibe-coded media and torrent filename parser written in pure Rust.
@@ -189,9 +189,4 @@ pub struct TorrentInfo {
 
 ## 📄 License
 
-Dual-licensed under either of:
-
-- Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE) or http://www.apache.org/licenses/LICENSE-2.0)
-- MIT License ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
-
-at your option.
+This is free and unencumbered software released into the public domain under the [Unlicense](UNLICENSE).
