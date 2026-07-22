@@ -2,6 +2,17 @@
 name = "rizzit"
 version = "0.1.0"
 edition = "2024"
+authors = ["Antigravity AI"]
+description = "Fast, high-accuracy media and torrent filename metadata parser in pure Rust."
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/slim/rizzit"
+readme = "README.md"
+keywords = ["torrent", "parser", "filename", "media", "metadata"]
+categories = ["parsing", "multimedia"]
+
+[[bench]]
+name = "bench_parser"
+harness = false
 
 [dependencies]
 regex = "1.10"
@@ -9,4 +20,13 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 isolang = "2.3"
 
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+strip = true
 
+[profile.bench]
+inherits = "release"
+debug = true
