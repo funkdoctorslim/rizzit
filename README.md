@@ -1,98 +1,197 @@
-# 👑 rizzit 👑
-> **"Unspoken rizz, sub-microsecond parsing. No cap, this is the most GOATED video/torrent name parser known to man. Fr, fr."**
+# rizzit 🎬
 
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](#)
-[![Rizz Level](https://img.shields.io/badge/rizz-skibidi_level-blueviolet)](#)
-[![License](https://img.shields.io/badge/license-MIT%20%2F%20Apache--2.0-gold)](#)
+[![License](https://img.shields.io/badge/license-MIT%20%2F%20Apache--2.0-blue)](#)
+[![Crate](https://img.shields.io/badge/crates.io-rizzit-orange)](#)
+
+> A fast, vibe-coded media and torrent filename parser written in pure Rust.
+
+`rizzit` extracts structured metadata (title, release year, season/episode numbers, resolution, video/audio codecs, audio channels, release groups, and quality tags) from raw video, torrent, and anime file paths.
 
 ---
 
-## 🧐 What is this?
-(a 100% vibe coded thing that actually works at 100% accuracy)
-Look, we all know Python's `guessit` is an absolute boomer. It takes 10 business days to parse a single filename and uses look-arounds that Rust's regex engine would cry looking at. 
+## 🔥 Key Features
 
-Enter **`rizzit`**—the ultimate, gigachad filename parser written in pure, unadulterated Rust. It has so much unspoken rizz that it doesn't just guess filenames; it *charms* the metadata out of them.
-
-### 🔥 Features (No Cap)
-* **⚡ Skibidi Speed:** Pre-compiled static regexes & zero-allocation bracket pre-scanner parse **over 500,000 filenames per second** in release mode. The CPU isn't compiling, it's *mewing*.
-* **🎬 Modern Codecs & Services:** Native detection for **AV1**, **H.265/HEVC**, **H.264**, **VC-1**, **Dolby Atmos**, **DTS-HD MA**, **TrueHD**, and streaming services (**Netflix**, **Amazon Prime**, **Disney+**, **Apple TV+**, **HBO Max**, **Paramount+**).
-* **🛡️ Anti-Cringe Bracket Matching:** Pre-scans and pairs up bracket stacks with stack-allocated linear pairs. Unbalanced brackets? Malformed brackets? `rizzit` ignores the drama and keeps it moving.
-* **🌀 Delimiterless Mewing Mode:** Can parse filenames that have literally **zero spaces or dots** (like `Interstellar20142160pHEVCx265-RARBG.mkv`). It dynamically reconstructs and inserts delimiters like a Michelin chef.
-* **🌐 Translating the Rizz:** Standardizes matched languages to official ISO English names using `isolang` (e.g. `eng` -> `"English"`, `vostfr` -> `"French"`).
-* **📂 Directory Merging Rizz:** Parses generic sample or subtitle files (like `Subs/English.srt` or `Show/Season 01/Sample.mkv`) and automatically inherits metadata from parent and grandparent directories. It's not lazy, it's *efficient*.
+- ⚡ **High Performance**: Parses over **120,000 filenames per second** per thread in release mode.
+- 🍿 **Media Specific**: Purpose-built for movies, TV series, anime releases, and media collections.
+- 🎬 **Modern Codec & Service Detection**: Built-in support for **AV1**, **H.265/HEVC**, **H.264**, **VC-1**, **Dolby Atmos**, **DTS-HD MA**, **TrueHD**, and streaming services (**Netflix**, **Amazon Prime**, **Disney+**, **Apple TV+**, **HBO Max**, **Paramount+**).
+- 🌀 **Delimiterless Mode**: Parses filenames with zero spaces or dots (e.g. `Interstellar20142160pHEVCx265-RARBG.mkv`) by reconstructing word boundaries dynamically.
+- 📂 **Directory Hierarchy Inheritance**: Automatically inherits metadata from parent and grandparent directories for generic sample or subtitle files (e.g., `Show Name / Season 01 / Sample.mkv`).
+- 🌐 **ISO Language Normalization**: Converts language tags (e.g. `eng`, `fre`, `vostfr`) into standard ISO English names using `isolang`.
+- 🛠️ **Strongly-Typed Enums**: Provides `VideoCodec`, `Resolution`, and `Source` enums for type-safe pattern matching without string allocations.
 
 ---
 
-## 🚀 How to Use (Let Him Cook)
+## 📦 Installation
 
-### 📦 Cargo Dependency
-Add the rizz to your `Cargo.toml`:
+Add `rizzit` to your `Cargo.toml`:
+
 ```toml
 [dependencies]
-rizzit = { git = "https://github.com/slim/rizzit" }
+rizzit = { git = "https://github.com/funkdoctorslim/rizzit" }
 ```
 
-### 🦀 Rust Example
+---
+
+## 💻 Examples
+
+### 1. Basic Movie & TV Show Parsing
+
 ```rust
 use rizzit::TorrentInfo;
 
 fn main() {
-    // A filename with extreme chaotic energy
-    let name = "[VCB-Studio] Jujutsu Kaisen S2 [Ma10p_1080p]/[BeanSub&VCB-Studio] Jujutsu Kaisen [36][Ma10p_1080p][x265_flac].mkv";
-    
-    // Let rizzit charm it
+    let name = "Cyberpunk.Edgerunners.S01E02.Like.a.Boy.1080p.BluRay.Remux.x264-CRUCiBLE.mkv";
     let info = TorrentInfo::parse(name);
-    
-    println!("Title: {}", info.title); // -> "Jujutsu Kaisen"
-    println!("Episode: {:?}", info.episode); // -> Some([36])
-    println!("Resolution: {:?}", info.resolution); // -> Some("1080p")
-    println!("Video Codec: {:?}", info.video_codec); // -> Some("H.265")
-    println!("Audio Codec: {:?}", info.audio_codec); // -> Some("FLAC")
-    println!("Release Group: {:?}", info.release_group); // -> Some("BeanSub&VCB-Studio")
-    println!("Formatted: {}", info.full_title()); // -> "Jujutsu Kaisen S02E36"
-    println!("Is TV Show? {}", info.is_tv_show()); // -> true
+
+    println!("Title:         {}", info.title);           // "Cyberpunk Edgerunners"
+    println!("Full Title:    {}", info.full_title());      // "Cyberpunk Edgerunners S01E02"
+    println!("Season:        {:?}", info.season);          // Some([1])
+    println!("Episode:       {:?}", info.episode);         // Some([2])
+    println!("Episode Title: {:?}", info.episode_title);  // Some("Like a Boy")
+    println!("Resolution:    {:?}", info.resolution);     // Some("1080p")
+    println!("Source:        {:?}", info.source);         // Some("Blu-ray")
+    println!("Codec:         {:?}", info.video_codec);     // Some("H.264")
+    println!("Group:         {:?}", info.release_group);  // Some("CRUCiBLE")
 }
 ```
 
-### 💻 CLI Usage
+### 2. Anime & Subtitle Tags
+
+```rust
+use rizzit::TorrentInfo;
+
+fn main() {
+    let name = "[SubsPlease] Kono Subarashii Sekai ni Shukufuku wo! 3 - 01 (1080p) [F109283].mkv";
+    let info = TorrentInfo::parse(name);
+
+    println!("Title:         {}", info.title);          // "Kono Subarashii Sekai ni Shukufuku wo! 3"
+    println!("Episode:       {:?}", info.episode);        // Some([1])
+    println!("Group:         {:?}", info.release_group); // Some("SubsPlease")
+    println!("Is Anime?      {}", info.is_anime());      // true
+    println!("CRC32 / Tags:  {:?}", info.other);         // Some(["CRC32:F109283"])
+}
+```
+
+### 3. Delimiterless Filenames (No Spaces or Dots)
+
+```rust
+use rizzit::parse;
+
+fn main() {
+    let raw = "Interstellar20142160pHEVCx265-RARBG.mkv";
+    let info = parse(raw);
+
+    assert_eq!(info.title, "Interstellar");
+    assert_eq!(info.year, Some(2014));
+    assert_eq!(info.resolution, Some("2160p".to_string()));
+    assert_eq!(info.video_codec, Some("H.265".to_string()));
+    assert_eq!(info.release_group, Some("RARBG".to_string()));
+}
+```
+
+### 4. Directory Metadata Inheritance
+
+```rust
+use rizzit::parse;
+
+fn main() {
+    // Generic file inside a structured directory path
+    let path = "The Office US/Season 02/Sample.mkv";
+    let info = parse(path);
+
+    println!("Inherited Title:  {}", info.title);    // "The Office US"
+    println!("Inherited Season: {:?}", info.season);  // Some([2])
+}
+```
+
+### 5. Strongly-Typed Enums & Normalized Filename Output
+
+```rust
+use rizzit::{parse, VideoCodec, Resolution, Source};
+
+fn main() {
+    let info = parse("Stranger.Things.S04E01.2160p.NF.WEB-DL.AV1.DV.HDR.Atmos-FLUX.mkv");
+
+    // Match typed enums directly
+    if info.typed_video_codec() == Some(VideoCodec::AV1) {
+        println!("Encoder: AV1 modern codec");
+    }
+
+    if info.typed_source() == Some(Source::WebDl) {
+        println!("Source: WEB-DL");
+    }
+
+    // Format a standard scene filename
+    println!("Normalized: {}", info.normalized_filename());
+    // -> "Stranger.Things.S04E01.2160p.WEB-DL.AV1-FLUX.mkv"
+}
+```
+
+### 6. Customizing Parser Settings
+
+```rust
+use rizzit::Parser;
+
+fn main() {
+    // Configure parser behavior with custom options
+    let custom_parser = Parser::new()
+        .inherit_parent_dir(false)  // Disable parent folder inheritance
+        .delimiterless_mode(true);
+
+    let info = custom_parser.parse("The Office US/Season 02/Sample.mkv");
+    println!("Title: {}", info.title); // "Sample"
+}
+```
+
+---
+
+## 💻 CLI Usage
+
+`rizzit` includes a lightweight command-line executable:
+
 ```bash
-# Clone and build in release (makes the CPU mew)
+# Build in release mode
 cargo build --release
 
-# Parse a single filename and get pretty JSON output
-./target/release/rizzit "Cyberpunk.Edgerunners.S01E02.Like.a.Boy.1080p.BluRay.Remux.x264-CRUCiBLE.mkv"
+# Parse a single filename (prints pretty-printed JSON)
+./target/release/rizzit "Cyberpunk.Edgerunners.S01E02.1080p.BluRay.x264-CRUCiBLE.mkv"
 
-# Or pipe a billion filenames into stdin
-cat names.txt | ./target/release/rizzit
+# Stream filenames from stdin (prints compact JSON per line)
+cat filenames.txt | ./target/release/rizzit
 ```
 
 ---
 
-## 📊 The Metadata Rizz Struct
-This is the structured representation of a parsed name:
+## 📊 TorrentInfo Struct
+
 ```rust
 pub struct TorrentInfo {
-    pub title: String,                  // Clean title
-    pub year: Option<u32>,              // Release year
-    pub season: Option<Vec<u32>>,       // Season numbers
-    pub episode: Option<Vec<u32>>,      // Episode numbers
+    pub title: String,                  // Clean media title
+    pub year: Option<u32>,              // Release year (e.g. 2024)
+    pub season: Option<Vec<u32>>,       // Season numbers (e.g. [1])
+    pub episode: Option<Vec<u32>>,      // Episode numbers (e.g. [2])
     pub episode_title: Option<String>,  // Episode title (e.g. "Like a Boy")
-    pub resolution: Option<String>,     // Video resolution (2160p, 1080p, etc.)
-    pub source: Option<String>,         // Source (Blu-ray, WEB-DL, etc.)
-    pub video_codec: Option<String>,    // Codec (AV1, H.265, H.264, etc.)
-    pub audio_codec: Option<String>,    // Audio codec (Dolby Digital, DTS, etc.)
-    pub audio_channels: Option<String>, // Channels (5.1, 2.0, etc.)
-    pub release_group: Option<String>,  // Release group
-    pub language: Option<Vec<String>>,  // ISO Normalized languages
-    pub other: Option<Vec<String>>,     // HDR, Dolby Vision, Streaming Service, Repack, etc.
-    pub container: Option<String>,      // Container extension
-    pub website: Option<String>,        // Release domain website
+    pub resolution: Option<String>,     // Video resolution (2160p, 1080p, 720p, etc.)
+    pub source: Option<String>,         // Source (Blu-ray, WEB-DL, WEBRip, etc.)
+    pub video_codec: Option<String>,    // Video codec (AV1, H.265, H.264, etc.)
+    pub audio_codec: Option<String>,    // Audio codec (Dolby Atmos, DTS-HD, FLAC, etc.)
+    pub audio_channels: Option<String>, // Audio channels (7.1, 5.1, 2.0, etc.)
+    pub release_group: Option<String>,  // Release group (e.g. RARBG, SubsPlease)
+    pub language: Option<Vec<String>>,  // ISO-normalized languages (e.g. ["English"])
+    pub other: Option<Vec<String>>,     // HDR, Dolby Vision, Netflix, Repack, etc.
+    pub container: Option<String>,      // Container extension (mkv, mp4, etc.)
+    pub website: Option<String>,        // Release website domain
 }
 ```
 
 ---
 
-## 🤝 Contributing
-If you find a filename that lacks rizz and breaks the parser, open an issue. No cap, we'll fix it fr.
+## 📄 License
 
-*Made with 💖, Rust, and absolute brainrot by Antigravity AI. (with funkdoctorslims expert opinions)*
+Dual-licensed under either of:
+
+- Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE) or http://www.apache.org/licenses/LICENSE-2.0)
+- MIT License ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
+
+at your option.
