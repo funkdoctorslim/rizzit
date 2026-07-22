@@ -2,10 +2,10 @@
 name = "rizzit"
 version = "0.1.0"
 edition = "2024"
-authors = ["Antigravity AI"]
+authors = ["funkdoctorslim"]
 description = "Fast, high-accuracy media and torrent filename metadata parser in pure Rust."
 license = "Unlicense"
-repository = "https://github.com/slim/rizzit"
+repository = "https://github.com/funkdoctorslim/rizzit"
 readme = "README.md"
 keywords = ["torrent", "parser", "filename", "media", "metadata"]
 categories = ["parsing", "multimedia"]

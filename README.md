@@ -2,7 +2,6 @@
 
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](#)
 [![License](https://img.shields.io/badge/license-Unlicense-blue)](#)
-[![Crate](https://img.shields.io/badge/crates.io-rizzit-orange)](#)
 
 > A fast, vibe-coded media and torrent filename parser written in pure Rust.
 
